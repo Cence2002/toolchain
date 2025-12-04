@@ -12,10 +12,16 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=/dev/null
 source "$SCRIPT_DIR/config.sh"
 
-if [ ! -f "$SSH_KEY_PATH" ]; then
-  echo "[create-vm] $SSH_KEY_PATH not found" >&2
-  echo "[create-vm] Generate SSH key with: ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519" >&2
-  exit 1
+# Ensure SSH directory exists
+mkdir -p "$HOME/.ssh"
+chmod 700 "$HOME/.ssh" || true
+
+SSH_KEY_PRIVATE="${SSH_KEY_PATH%.pub}"
+if [ ! -f "$SSH_KEY_PRIVATE" ] || [ ! -f "$SSH_KEY_PATH" ]; then
+  echo "[create-vm] SSH key not found, generating new key pair"
+  ssh-keygen -t ed25519 -f "$SSH_KEY_PRIVATE" -N "" -C "$USER@$(hostname)"
+  chmod 600 "$SSH_KEY_PRIVATE" || true
+  chmod 644 "$SSH_KEY_PATH" || true
 fi
 
 MACHINE_TYPE="e2-micro"
@@ -45,11 +51,18 @@ fi
 mkdir -p "$HOME/.ssh/vms"
 CONFIG_FILE="$HOME/.ssh/vms/$NAME"
 
+# Compute a portable path for ssh config (use ~ instead of hardcoded $HOME path)
+KEY_FOR_CONFIG="$SSH_KEY_PRIVATE"
+if [[ "$KEY_FOR_CONFIG" == "$HOME/"* ]]; then
+  # Replace leading $HOME/... with ~/...
+  KEY_FOR_CONFIG="~/${KEY_FOR_CONFIG#$HOME/}"
+fi
+
 cat > "$CONFIG_FILE" <<EOF
 Host $NAME
     HostName $IP
     User $SSH_USER
-    IdentityFile ${SSH_KEY_PATH%.pub}
+    IdentityFile $KEY_FOR_CONFIG
     ForwardAgent yes
 EOF
 

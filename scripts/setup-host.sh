@@ -9,26 +9,30 @@ echo "[setup-host] Installing base packages"
 sudo apt-get update -qq
 sudo apt-get install -y -qq git curl apt-transport-https ca-certificates gnupg
 
-echo "[setup-host] Installing Docker"
+echo "[setup-host] Installing docker"
 if ! command -v docker &> /dev/null; then
   curl -fsSL https://get.docker.com -o /tmp/get-docker.sh
   sudo sh /tmp/get-docker.sh
   rm -f /tmp/get-docker.sh
+  sudo usermod -aG docker "$USER" || true
 fi
 
 if ! command -v gcloud &> /dev/null; then
-  echo "[setup-host] Installing Google Cloud"
+  echo "[setup-host] Installing gcloud"
   curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
   echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
   sudo apt-get update -qq
   sudo apt-get install -y -qq google-cloud-cli
-  echo "[setup-host] Setting up gcloud"
+fi
+
+echo "[setup-host] Setting up gcloud"
+if ! gcloud auth list --filter=status:ACTIVE --format="value(account)" | grep -q .; then
+  echo "[setup-host] No authenticated accounts found, logging in"
   gcloud auth login --no-launch-browser || true
   gcloud config set project "$GCP_PROJECT" || true
 fi
 
-echo "[setup-host] Setting up docker, projects root, and SSH config"
-sudo usermod -aG docker "$USER" || true
+echo "[setup-host] Setting up projects and ssh"
 
 mkdir -p "$PROJECTS_ROOT"
 
