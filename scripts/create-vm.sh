@@ -67,16 +67,32 @@ Host $NAME
 EOF
 
 echo "[create-vm] Waiting for host to start"
-sleep 30
-
-echo "[create-vm] Cloning workflow and setting up"
 ssh-keygen -R "$IP" >/dev/null 2>&1 || true
 ssh-keygen -R "$NAME" >/dev/null 2>&1 || true
-ssh -o StrictHostKeyChecking=no "$NAME" \
+
+MAX_ATTEMPTS=60
+ATTEMPT=0
+while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
+  if ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 "$NAME" "echo 'SSH connection successful'" >/dev/null 2>&1; then
+    echo "[create-vm] Host is ready"
+    break
+  fi
+  ATTEMPT=$((ATTEMPT + 1))
+  if [ $ATTEMPT -lt $MAX_ATTEMPTS ]; then
+    echo "[create-vm] Waiting for SSH (attempt $ATTEMPT/$MAX_ATTEMPTS)..."
+    sleep 5
+  else
+    echo "[create-vm] Failed to connect to host after $MAX_ATTEMPTS attempts" >&2
+    exit 1
+  fi
+done
+
+echo "[create-vm] Installing git, cloning workflow and setting up"
+ssh -t -o StrictHostKeyChecking=no "$NAME" \
   "sudo apt-get update -qq && \
    sudo apt-get install -y -qq git && \
    cd ~ && \
-   git clone https://github.com/Cence2002/workflow.git && \
+   git clone $WORKFLOW_URL workflow && \
    ./workflow/scripts/setup-host.sh"
 
 echo "[create-vm] Done"
