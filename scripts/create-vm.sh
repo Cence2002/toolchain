@@ -27,7 +27,7 @@ fi
 MACHINE_TYPE="e2-micro"
 DISK_SIZE="10GB"
 
-SSH_METADATA="${SSH_USER}:$(cat "$SSH_KEY_PATH")"
+SSH_METADATA="${USER}:$(cat "$SSH_KEY_PATH")"
 
 echo "[create-vm] Creating '$NAME' (project: $GCP_PROJECT, zone: $GCP_ZONE, machine type: $MACHINE_TYPE, disk size: $DISK_SIZE)"
 gcloud compute instances create "$NAME" \

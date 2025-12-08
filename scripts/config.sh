@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+USER="$(whoami)"
+
 GCP_PROJECT="projects-480019"
 GCP_ZONE="europe-west1-b"
 
