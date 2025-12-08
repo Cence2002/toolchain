@@ -91,10 +91,8 @@ echo "[create-vm] Installing git, cloning workflow and setting up"
 ssh -t -o StrictHostKeyChecking=no "$NAME" \
   "sudo apt-get update -qq && \
    sudo apt-get install -y -qq git && \
-   mkdir -p ~/projects && \
-   cd ~/projects && \
+   cd ~ && \
    git clone $WORKFLOW_URL && \
-   cd workflow && \
-   ./scripts/setup-host.sh"
+   ./workflow/scripts/setup-host.sh"
 
 echo "[create-vm] Done"

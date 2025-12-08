@@ -5,8 +5,8 @@ This project provides scripts to manage Google Cloud VMs for development and a D
 On any machine (local or VM), the recommended layout is:
 
 ```text
+~/workflow/         # this repo
 ~/projects/
-  workflow/         # this repo
   <your-projects>/  # created via scripts/create-project.sh
 ```
 
@@ -21,15 +21,14 @@ On any machine (local or VM), the recommended layout is:
 On a new machine or VM:
 
 ```bash
-mkdir -p ~/projects
-cd ~/projects
+cd ~
 git clone git@github.com:Cence2002/workflow.git workflow
 cd workflow
 ```
 
 ### Using the Dev Container
 
-1. Open `~/projects/workflow` in VS Code or Cursor.
+1. Open `~/workflow` in VS Code or Cursor.
 2. Click **Reopen in Container** when prompted.
 
 Inside the devcontainer:
@@ -67,7 +66,7 @@ Sync projects on the VM:
 ./scripts/sync-projects.sh
 ```
 
-VMs follow the same layout: the workflow repo is cloned into `~/projects/workflow`.
+VMs follow the same layout: the workflow repo is cloned into `~/workflow`.
 
 ## Creating New Projects
 

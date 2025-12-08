@@ -4,6 +4,7 @@
     "dockerfile": "Dockerfile",
     "context": ".."
   },
+  "workspaceFolder": "/workspaces/workflow",
   "features": {},
   "mounts": [
     "source=${localEnv:HOME}/projects,target=/home/bence/projects,type=bind,consistency=cached",

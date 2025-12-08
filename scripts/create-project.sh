@@ -31,6 +31,7 @@ cat > "$PROJECT_DIR/.devcontainer/devcontainer.json" <<EOF
 {
   "name": "${NAME}",
   "image": "python:3",
+  "workspaceFolder": "/workspaces/${NAME}",
   "features": {},
   "mounts": [
     "source=\${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,consistency=cached"
