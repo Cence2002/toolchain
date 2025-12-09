@@ -40,7 +40,7 @@ cat > "$PROJECT_DIR/.devcontainer/devcontainer.json" <<EOF
 EOF
 
 # Initialise git repo
-git -C "$PROJECT_DIR" init
+git -C "$PROJECT_DIR" init -b main
 
 echo "[create-project] Done. New project created at: $PROJECT_DIR"
 echo "[create-project] You can now open this folder in VS Code and use 'Reopen in Container'."
