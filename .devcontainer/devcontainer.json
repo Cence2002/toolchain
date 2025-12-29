@@ -4,23 +4,26 @@
     "dockerfile": "Dockerfile",
     "context": ".."
   },
-  "workspaceFolder": "/workspaces/workflow",
-  "features": {},
-  "mounts": [
-    "source=${localEnv:HOME}/projects,target=/home/bence/projects,type=bind,consistency=cached",
-    "source=${localEnv:HOME}/.ssh,target=/home/bence/.ssh,type=bind,consistency=cached"
-  ],
+  // "workspaceFolder": "/workspaces/workflow",
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2.5.5": {
+      "username": "bence",
+      "userUid": "automatic",
+      "userGid": "automatic",
+      "upgradePackages": false
+    }
+  },
+  // "mounts": [
+  //   "source=${localEnv:HOME}/projects,target=/home/bence/projects,type=bind,consistency=cached",
+  //   "source=${localEnv:HOME}/.ssh,target=/home/bence/.ssh,type=bind,consistency=cached"
+  // ],
   "remoteUser": "bence",
   "customizations": {
     "vscode": {
       "extensions": [
         "ms-vscode-remote.remote-containers",
         "googlecloudtools.cloudcode"
-      ],
-      "settings": {
-        "terminal.integrated.defaultProfile.linux": "bash"
-      }
+      ]
     }
-  },
-  "postCreateCommand": "echo 'Devcontainer is ready'"
+  }
 }
