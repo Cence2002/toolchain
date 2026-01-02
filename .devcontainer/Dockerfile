@@ -9,8 +9,6 @@ RUN apt-get update \
         gnupg \
         openssh-client \
         git \
-        sudo \
-        bash \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
